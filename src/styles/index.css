@@ -74,6 +74,13 @@
   margin-top: 10px;
   text-align: center;
 }
+
+.dashboard-wrapper{
+  flex-direction: column;
+    display: flex;
+    gap: 10px;
+}
+
 .dashboard-nav{
   display: flex;
   padding: 10px;

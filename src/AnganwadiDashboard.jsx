@@ -143,123 +143,572 @@ const AnganwadiDashboard = ({ user, onLogout }) => {
   };
 
   return (
-    <div className="dashboard-wrapper">
-      {/* Sidebar */}
-      <div className="dashboard-sidebar">
-        <div className="dashboard-sidebar-header">
-          <img src="login-bg.png" alt="Logo" className="dashboard-logo" />
-          <h2 className="dashboard-title">Anganwadi Worker</h2>
-          <p className="dashboard-subtitle">Dashboard</p>
+    <div style={{ 
+      padding: '20px', 
+      background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)', 
+      minHeight: '100vh' 
+    }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+        {/* Header */}
+        <div style={{ 
+          background: 'linear-gradient(135deg, #374151 0%, #434D5C 100%)',
+          borderRadius: '16px',
+          padding: '32px',
+          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08)',
+          marginBottom: '24px',
+          color: 'white',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          {/* Background decoration */}
+          <div style={{
+            position: 'absolute',
+            top: '-20px',
+            right: '-20px',
+            width: '80px',
+            height: '80px',
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.08)',
+            opacity: 0.6
+          }}></div>
+          <div style={{
+            position: 'absolute',
+            bottom: '-15px',
+            left: '-15px',
+            width: '60px',
+            height: '60px',
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.06)',
+            opacity: 0.7
+          }}></div>
+          
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 2 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{
+                width: '48px',
+                height: '48px',
+                backgroundColor: 'rgba(255,255,255,0.15)',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px solid rgba(255,255,255,0.2)'
+              }}>
+                <span style={{ fontSize: '20px' }}>👩‍⚕️</span>
+              </div>
+              <div>
+                <h1 style={{ color: 'white', margin: '0 0 4px 0', fontSize: '28px', fontWeight: '600' }}>
+                  Anganwadi Dashboard
+                </h1>
+                <p style={{ color: 'rgba(255,255,255,0.85)', margin: 0, fontSize: '14px', fontWeight: '400' }}>
+                  Welcome back, {user?.username || 'Worker'}
+                </p>
+              </div>
+            </div>
+            <button onClick={onLogout} style={{
+              padding: '12px 24px',
+              background: 'rgba(239, 68, 68, 0.9)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              fontWeight: '500',
+              fontSize: '14px',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.background = 'rgba(239, 68, 68, 1)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.background = 'rgba(239, 68, 68, 0.9)';
+            }}>
+              Logout
+            </button>
+          </div>
         </div>
-        <nav>
-          <ul className="dashboard-nav">
-            <li>
-              <button className={activePage === 'records' ? 'dashboard-nav-btn active' : 'dashboard-nav-btn'} onClick={() => setActivePage('records')}>Child Records</button>
-            </li>
-            <li>
-              <button className={activePage === 'add' ? 'dashboard-nav-btn active' : 'dashboard-nav-btn'} onClick={() => setActivePage('add')}>Add New Child</button>
-            </li>
-            <li>
-              <button className={activePage === 'profile' ? 'dashboard-nav-btn active' : 'dashboard-nav-btn'} onClick={() => setActivePage('profile')}>Profile</button>
-            </li>
-            <li>
-              <button className="dashboard-nav-btn" onClick={onLogout}>Logout</button>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      {/* Main Content */}
-      {activePage === 'records' && (
-        <div className="dashboard-main">
-          {/* Dashboard header */}
-          <div style={{ marginBottom: '2rem', background: 'white', padding: '2rem', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', border: '1px solid #e9ecef' }}>
-            <h1 style={{ color: '#1e3a8a', fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem' }}>Child Health Dashboard</h1>
-            <p style={{ color: '#6b7280', fontSize: '1.1rem', marginBottom: '1.5rem' }}>Welcome, <span style={{ fontWeight: 'bold', color: '#2563eb' }}>{user?.username || ''}</span>!</p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem' }}>
-              <div style={{ background: '#f3f4f6', padding: '1.5rem', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                <h4 style={{ color: '#374151', fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.5rem' }}>Total Children Screened</h4>
-                <div style={{ color: '#1e3a8a', fontSize: '2.2rem', fontWeight: 'bold' }}>{stats.totalChildrenScreened}</div>
+
+        {/* Navigation Tabs */}
+        <div style={{
+          display: 'flex',
+          gap: '8px',
+          marginBottom: '24px',
+          background: '#ffffff',
+          padding: '8px',
+          borderRadius: '12px',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <button
+            onClick={() => setActivePage('records')}
+            style={{
+              flex: 1,
+              padding: '12px 16px',
+              border: 'none',
+              borderRadius: '8px',
+              background: activePage === 'records' ? 'linear-gradient(135deg, #374151 0%, #4b5563 100%)' : 'transparent',
+              color: activePage === 'records' ? 'white' : '#6b7280',
+              fontWeight: '500',
+              fontSize: '14px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            📋 Child Records
+          </button>
+          <button
+            onClick={() => setActivePage('add')}
+            style={{
+              flex: 1,
+              padding: '12px 16px',
+              border: 'none',
+              borderRadius: '8px',
+              background: activePage === 'add' ? 'linear-gradient(135deg, #374151 0%, #4b5563 100%)' : 'transparent',
+              color: activePage === 'add' ? 'white' : '#6b7280',
+              fontWeight: '500',
+              fontSize: '14px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            ➕ Add New Child
+          </button>
+          <button
+            onClick={() => setActivePage('profile')}
+            style={{
+              flex: 1,
+              padding: '12px 16px',
+              border: 'none',
+              borderRadius: '8px',
+              background: activePage === 'profile' ? 'linear-gradient(135deg, #374151 0%, #4b5563 100%)' : 'transparent',
+              color: activePage === 'profile' ? 'white' : '#6b7280',
+              fontWeight: '500',
+              fontSize: '14px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            👤 Profile
+          </button>
+        </div>
+        {/* Main Content */}
+        {activePage === 'records' && (
+          <div>
+            {/* Statistics Cards */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '20px',
+              marginBottom: '30px'
+            }}>
+              <div style={{
+                background: '#ffffff',
+                padding: '24px',
+                borderRadius: '12px',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+                textAlign: 'center',
+                border: '1px solid #e5e7eb',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.boxShadow = '0 8px 15px rgba(0, 0, 0, 0.1)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.05)';
+              }}>
+                <div style={{ fontSize: '32px', marginBottom: '12px', color: '#6b7280' }}>📊</div>
+                <h3 style={{ 
+                  margin: '0', 
+                  fontSize: '32px', 
+                  color: '#111827',
+                  fontWeight: '700'
+                }}>
+                  {stats.totalChildrenScreened}
+                </h3>
+                <p style={{ 
+                  margin: '8px 0 0 0', 
+                  color: '#6b7280', 
+                  fontSize: '14px', 
+                  fontWeight: '500',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>Total Screened</p>
               </div>
-              <div style={{ background: '#f3f4f6', padding: '1.5rem', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                <h4 style={{ color: '#374151', fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.5rem' }}>Suspected Cases</h4>
-                <div style={{ color: '#dc2626', fontSize: '2.2rem', fontWeight: 'bold' }}>{stats.positiveCases}</div>
+
+              <div style={{
+                background: '#ffffff',
+                padding: '24px',
+                borderRadius: '12px',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+                textAlign: 'center',
+                border: '1px solid #e5e7eb',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.boxShadow = '0 8px 15px rgba(0, 0, 0, 0.1)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.05)';
+              }}>
+                <div style={{ fontSize: '32px', marginBottom: '12px', color: '#dc2626' }}>🏥</div>
+                <h3 style={{ 
+                  margin: '0', 
+                  fontSize: '32px', 
+                  color: '#111827',
+                  fontWeight: '700'
+                }}>
+                  {stats.positiveCases}
+                </h3>
+                <p style={{ 
+                  margin: '8px 0 0 0', 
+                  color: '#6b7280', 
+                  fontSize: '14px', 
+                  fontWeight: '500',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>Suspected Cases</p>
               </div>
-              <div style={{ background: '#f3f4f6', padding: '1.5rem', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                <h4 style={{ color: '#374151', fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.5rem' }}>Today's Screenings</h4>
-                <div style={{ color: '#059669', fontSize: '2.2rem', fontWeight: 'bold' }}>{stats.todayScreenings}</div>
+
+              <div style={{
+                background: '#ffffff',
+                padding: '24px',
+                borderRadius: '12px',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+                textAlign: 'center',
+                border: '1px solid #e5e7eb',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.boxShadow = '0 8px 15px rgba(0, 0, 0, 0.1)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.05)';
+              }}>
+                <div style={{ fontSize: '32px', marginBottom: '12px', color: '#059669' }}>📅</div>
+                <h3 style={{ 
+                  margin: '0', 
+                  fontSize: '32px', 
+                  color: '#111827',
+                  fontWeight: '700'
+                }}>
+                  {stats.todayScreenings}
+                </h3>
+                <p style={{ 
+                  margin: '8px 0 0 0', 
+                  color: '#6b7280', 
+                  fontSize: '14px', 
+                  fontWeight: '500',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>Today's Screenings</p>
               </div>
             </div>
-          </div>
-          {/* Search bar */}
-          <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              placeholder="Search by name, school, or kendra..."
-              style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #e5e7eb', fontSize: '1rem', width: '100%', maxWidth: '350px', marginLeft: '2%' }}
-              aria-label="Search child records"
-            />
-            {searchTerm && (
-              <button
-                onClick={() => setSearchTerm('')}
-                style={{ background: '#ef4444', color: 'white', border: 'none', borderRadius: '8px', padding: '0.5rem 1rem', fontWeight: '500', cursor: 'pointer' }}
-              >Clear</button>
-            )}
-          </div>
-          {/* Child Records Table and Modal */}
-          <div style={{ background: 'white', padding: '2rem', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', border: '1px solid #e9ecef' }}>
-            <h2 style={{ color: '#374151', fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem' }}>Child Records</h2>
-            <div style={{ overflowX: 'auto', marginBottom: '2rem' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '700px', borderRadius: '8px', background: 'white', boxShadow: '0 2px 4px rgba(0,0,0,0.04)' }}>
-                <thead>
-                  <tr style={{ background: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
-                    <th style={{ padding: '1rem', fontWeight: '600', color: '#374151', fontSize: '1rem' }}>Name</th>
-                    <th style={{ padding: '1rem', fontWeight: '600', color: '#374151', fontSize: '1rem' }}>Age</th>
-                    <th style={{ padding: '1rem', fontWeight: '600', color: '#374151', fontSize: '1rem' }}>Gender</th>
-                    <th style={{ padding: '1rem', fontWeight: '600', color: '#374151', fontSize: '1rem' }}>Weight (kg)</th>
-                    <th style={{ padding: '1rem', fontWeight: '600', color: '#374151', fontSize: '1rem' }}>Status</th>
-                    <th style={{ padding: '1rem', fontWeight: '600', color: '#374151', fontSize: '1rem' }}>School Name & Anganwadi Kendra</th>
-                    <th style={{ padding: '1rem', fontWeight: '600', color: '#374151', fontSize: '1rem' }}>Date</th>
-                    <th style={{ padding: '1rem', fontWeight: '600', color: '#374151', fontSize: '1rem' }}>Details</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredChildren.length === 0 ? (
-                    <tr>
-                      <td colSpan={8} style={{ textAlign: 'center', color: '#9ca3af', padding: '2rem', fontSize: '1.1rem' }}>No records found.</td>
-                    </tr>
-                  ) : (
-                    filteredChildren.map(child => (
-                      <tr key={child.id} style={{ borderBottom: '1px solid #f3f4f6', background: selectedChild && selectedChild.id === child.id ? '#f3f4f6' : 'white', transition: 'background 0.2s' }}>
-                        <td style={{ padding: '1rem', fontWeight: '600', color: '#111827' }}>{child.child_name}</td>
-                        <td style={{ padding: '1rem', color: '#6b7280' }}>{child.age}</td>
-                        <td style={{ padding: '1rem', color: '#6b7280' }}>{child.gender}</td>
-                        <td style={{ padding: '1rem', color: '#6b7280' }}>{child.weight}</td>
-                        <td style={{ padding: '1rem' }}>
-                          <span style={{ padding: '4px 12px', borderRadius: '16px', fontSize: '0.95rem', fontWeight: '500', backgroundColor: child.health_status === 'Checked' ? '#d1fae5' : child.health_status === 'Pending' ? '#fef3c7' : child.health_status === 'Referred' ? '#fee2e2' : '#f3f4f6', color: child.health_status === 'Checked' ? '#065f46' : child.health_status === 'Pending' ? '#92400e' : child.health_status === 'Referred' ? '#991b1b' : '#6b7280' }}>{child.health_status}</span>
-                        </td>
-                        <td style={{ padding: '1rem', color: '#6b7280' }}>
-                          <div><strong>School:</strong> {child.school_name || 'N/A'}</div>
-                          <div><strong>Kendra:</strong> {child.anganwadi_kendra || 'N/A'}</div>
-                        </td>
-                        <td style={{ padding: '1rem', color: '#9ca3af', fontSize: '0.95rem', fontFamily: 'monospace' }}>{child.created_at ? new Date(child.created_at).toLocaleDateString('en-IN') : 'N/A'}</td>
-                        <td style={{ padding: '1rem' }}>
-                          <button
-                            style={{ background: '#1e3a8a', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 16px', fontWeight: '500', cursor: 'pointer' }}
-                            onClick={() => {
-                              setSelectedChild(child);
-                              setShowModal(true);
-                            }}
-                          >View</button>
-                        </td>
+
+            {/* Search bar above records section */}
+            <div style={{ 
+              margin: '0 0 18px 0', 
+              display: 'flex', 
+              justifyContent: 'flex-end', 
+              alignItems: 'center' 
+            }}>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                placeholder="Search by child, school, anganwadi..."
+                style={{
+                  padding: '10px 16px',
+                  borderRadius: '8px',
+                  border: '1.5px solid #e5e7eb',
+                  fontSize: '15px',
+                  minWidth: '320px',
+                  background: '#ffffff',
+                  color: '#374151',
+                  fontWeight: 500,
+                  outline: 'none',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+                  transition: 'all 0.2s',
+                }}
+                onFocus={e => {
+                  e.target.style.borderColor = '#6b7280';
+                  e.target.style.background = 'white';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(107, 114, 128, 0.1)';
+                }}
+                onBlur={e => {
+                  e.target.style.borderColor = '#e5e7eb';
+                  e.target.style.background = '#f9fafb';
+                  e.target.style.boxShadow = '0 2px 8px rgba(0,0,0,0.03)';
+                }}
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  style={{ 
+                    background: '#ef4444', 
+                    color: 'white', 
+                    border: 'none', 
+                    borderRadius: '8px', 
+                    padding: '8px 16px', 
+                    fontWeight: '500', 
+                    cursor: 'pointer',
+                    marginLeft: '12px',
+                    fontSize: '14px'
+                  }}
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+
+            {/* Records Section */}
+            <div style={{
+              background: '#ffffff',
+              padding: '32px',
+              borderRadius: '12px',
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+              border: '1px solid #e5e7eb'
+            }}>
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                marginBottom: '24px',
+                borderBottom: '2px solid #f3f4f6',
+                paddingBottom: '16px'
+              }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  background: '#f3f4f6',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <span style={{ fontSize: '18px' }}>📋</span>
+                </div>
+                <h3 style={{ 
+                  margin: '0 0 0 12px', 
+                  fontSize: '24px', 
+                  color: '#111827',
+                  fontWeight: '600'
+                }}>
+                  Child Records
+                </h3>
+              </div>
+              
+              {filteredChildren.length === 0 ? (
+                <div style={{
+                  background: '#f9fafb',
+                  padding: '48px',
+                  borderRadius: '12px',
+                  border: '2px dashed #d1d5db',
+                  textAlign: 'center'
+                }}>
+                  <div style={{ fontSize: '48px', marginBottom: '16px', color: '#9ca3af' }}>📋</div>
+                  <h4 style={{ 
+                    margin: '0 0 12px 0', 
+                    color: '#374151',
+                    fontSize: '20px',
+                    fontWeight: '600'
+                  }}>No records found</h4>
+                  <p style={{ 
+                    margin: '0', 
+                    fontSize: '14px',
+                    color: '#6b7280',
+                    lineHeight: '1.5',
+                    maxWidth: '400px',
+                    margin: '0 auto'
+                  }}>No child records match your search criteria or no records have been added yet.</p>
+                </div>
+              ) : (
+                <div style={{ overflowX: 'auto', marginTop: '20px' }}>
+                  <table style={{ 
+                    width: '100%', 
+                    borderCollapse: 'separate',
+                    borderSpacing: '0',
+                    textAlign: 'left',
+                    backgroundColor: 'white',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    border: '1px solid #e5e7eb'
+                  }}>
+                    <thead>
+                      <tr style={{ 
+                        background: '#f9fafb',
+                        borderBottom: '1px solid #e5e7eb'
+                      }}>
+                        <th style={{ 
+                          padding: '16px', 
+                          fontWeight: '600',
+                          color: '#374151',
+                          fontSize: '14px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px'
+                        }}>Child Name</th>
+                        <th style={{ 
+                          padding: '16px', 
+                          fontWeight: '600',
+                          color: '#374151',
+                          fontSize: '14px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px'
+                        }}>Age</th>
+                        <th style={{ 
+                          padding: '16px', 
+                          fontWeight: '600',
+                          color: '#374151',
+                          fontSize: '14px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px'
+                        }}>Gender</th>
+                        <th style={{ 
+                          padding: '16px', 
+                          fontWeight: '600',
+                          color: '#374151',
+                          fontSize: '14px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px'
+                        }}>Weight (kg)</th>
+                        <th style={{ 
+                          padding: '16px', 
+                          fontWeight: '600',
+                          color: '#374151',
+                          fontSize: '14px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px'
+                        }}>Status</th>
+                        <th style={{ 
+                          padding: '16px', 
+                          fontWeight: '600',
+                          color: '#374151',
+                          fontSize: '14px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px'
+                        }}>School & Anganwadi</th>
+                        <th style={{ 
+                          padding: '16px', 
+                          fontWeight: '600',
+                          color: '#374151',
+                          fontSize: '14px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px'
+                        }}>Date</th>
+                        <th style={{ 
+                          padding: '16px', 
+                          fontWeight: '600',
+                          color: '#374151',
+                          fontSize: '14px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px'
+                        }}>Details</th>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+                    </thead>
+                    <tbody>
+                      {filteredChildren.map((child, index) => (
+                        <tr key={child.id} style={{ 
+                          borderBottom: '1px solid #f3f4f6',
+                          transition: 'all 0.2s ease',
+                          backgroundColor: index % 2 === 0 ? '#ffffff' : '#fafbfc'
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.backgroundColor = '#f9fafb';
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.backgroundColor = index % 2 === 0 ? '#ffffff' : '#fafbfc';
+                        }}>
+                          <td style={{ 
+                            padding: '16px', 
+                            fontWeight: '600',
+                            color: '#111827',
+                            fontSize: '14px'
+                          }}>{child.child_name || 'N/A'}</td>
+                          <td style={{ 
+                            padding: '16px',
+                            color: '#6b7280',
+                            fontSize: '14px'
+                          }}>{child.age || 'N/A'}</td>
+                          <td style={{ 
+                            padding: '16px',
+                            color: '#6b7280',
+                            fontSize: '14px'
+                          }}>{child.gender || 'N/A'}</td>
+                          <td style={{ 
+                            padding: '16px',
+                            color: '#6b7280',
+                            fontSize: '14px',
+                            fontWeight: '500'
+                          }}>{child.weight || 'N/A'}</td>
+                          <td style={{ padding: '16px' }}>
+                            <span style={{
+                              padding: '4px 12px',
+                              borderRadius: '16px',
+                              fontSize: '12px',
+                              fontWeight: '500',
+                              backgroundColor: 
+                                child.health_status === 'Checked' ? '#d1fae5' :
+                                child.health_status === 'Pending' ? '#fef3c7' :
+                                child.health_status === 'Referred' ? '#fee2e2' : '#f3f4f6',
+                              color:
+                                child.health_status === 'Checked' ? '#065f46' :
+                                child.health_status === 'Pending' ? '#92400e' :
+                                child.health_status === 'Referred' ? '#991b1b' : '#6b7280'
+                            }}>
+                              {child.health_status || 'Unknown'}
+                            </span>
+                          </td>
+                          <td style={{ 
+                            padding: '16px',
+                            color: '#6b7280',
+                            fontSize: '13px'
+                          }}>
+                            <div><strong>School:</strong> {child.school_name || 'N/A'}</div>
+                            <div><strong>Kendra:</strong> {child.anganwadi_kendra || 'N/A'}</div>
+                          </td>
+                          <td style={{ 
+                            padding: '16px',
+                            color: '#9ca3af',
+                            fontSize: '13px',
+                            fontFamily: 'monospace'
+                          }}>
+                            {child.created_at ? new Date(child.created_at).toLocaleDateString('en-IN') : 'N/A'}
+                          </td>
+                          <td style={{ padding: '16px' }}>
+                            <button
+                              style={{ 
+                                background: 'linear-gradient(135deg, #374151 0%, #4b5563 100%)', 
+                                color: 'white', 
+                                border: 'none', 
+                                borderRadius: '8px', 
+                                padding: '8px 16px', 
+                                fontWeight: '500', 
+                                cursor: 'pointer',
+                                fontSize: '12px',
+                                transition: 'all 0.2s ease'
+                              }}
+                              onClick={() => {
+                                setSelectedChild(child);
+                                setShowModal(true);
+                              }}
+                              onMouseOver={(e) => {
+                                e.target.style.transform = 'translateY(-1px)';
+                                e.target.style.boxShadow = '0 4px 12px rgba(55, 65, 81, 0.3)';
+                              }}
+                              onMouseOut={(e) => {
+                                e.target.style.transform = 'translateY(0)';
+                                e.target.style.boxShadow = 'none';
+                              }}
+                            >
+                              View
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
-            {/* ChildDetails modal popup */}
+
+            {/* Modal for child details */}
             {showModal && selectedChild && (
               <div style={{
                 position: 'fixed',
@@ -267,7 +716,7 @@ const AnganwadiDashboard = ({ user, onLogout }) => {
                 left: 0,
                 width: '100vw',
                 height: '100vh',
-                background: 'rgba(0,0,0,0.35)',
+                background: 'rgba(0,0,0,0.5)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -276,123 +725,626 @@ const AnganwadiDashboard = ({ user, onLogout }) => {
                 <div style={{
                   background: 'white',
                   borderRadius: '16px',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
-                  padding: '2rem',
-                  minWidth: '350px',
+                  boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+                  padding: '32px',
+                  minWidth: '400px',
                   maxWidth: '90vw',
+                  maxHeight: '90vh',
+                  overflow: 'auto',
                   position: 'relative'
                 }}>
                   <button
                     style={{
                       position: 'absolute',
-                      top: '18px',
-                      right: '18px',
+                      top: '16px',
+                      right: '16px',
                       background: '#ef4444',
                       color: 'white',
                       border: 'none',
                       borderRadius: '8px',
                       padding: '8px 16px',
                       fontWeight: '600',
-                      fontSize: '1rem',
+                      fontSize: '14px',
                       cursor: 'pointer',
-                      boxShadow: '0 2px 8px rgba(239,68,68,0.12)'
+                      boxShadow: '0 2px 8px rgba(239,68,68,0.3)'
                     }}
                     onClick={() => {
                       setShowModal(false);
                       setSelectedChild(null);
                       setEditStatus('');
                     }}
-                  >Exit</button>
+                  >
+                    ✕ Close
+                  </button>
                   <ChildDetails child={selectedChild} />
-                  {/* Health status change popup */}
-                  <form onSubmit={handleStatusChange} style={{ marginTop: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <label style={{ fontWeight: 500 }}>Change Health Status:</label>
-                    <select
-                      value={editStatus || selectedChild.health_status}
-                      onChange={e => setEditStatus(e.target.value)}
-                      style={{ padding: '0.5rem', borderRadius: '6px', border: '1px solid #e5e7eb' }}
-                      required
-                    >
-                      <option value="Checked">Checked</option>
-                      <option value="Pending">Pending</option>
-                      <option value="Referred">Referred</option>
-                      <option value="Treated">Treated</option>
-                    </select>
-                    <button type="submit" disabled={statusLoading || (!editStatus || editStatus === selectedChild.health_status)} style={{ background: '#2563eb', color: 'white', border: 'none', borderRadius: '8px', padding: '0.5rem 1.5rem', fontWeight: '600', fontSize: '1rem', cursor: statusLoading ? 'not-allowed' : 'pointer' }}>
-                      {statusLoading ? 'Updating...' : 'Update'}
-                    </button>
+                  {/* Health status change form */}
+                  <form onSubmit={handleStatusChange} style={{ 
+                    marginTop: '24px', 
+                    padding: '20px',
+                    background: '#f9fafb',
+                    borderRadius: '12px',
+                    border: '1px solid #e5e7eb'
+                  }}>
+                    <h4 style={{ 
+                      margin: '0 0 16px 0', 
+                      color: '#374151',
+                      fontSize: '16px',
+                      fontWeight: '600'
+                    }}>Update Health Status</h4>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                      <label style={{ fontWeight: '500', color: '#374151', fontSize: '14px' }}>
+                        Status:
+                      </label>
+                      <select
+                        value={editStatus || selectedChild.health_status}
+                        onChange={e => setEditStatus(e.target.value)}
+                        style={{ 
+                          padding: '8px 12px', 
+                          borderRadius: '6px', 
+                          border: '1px solid #e5e7eb',
+                          fontSize: '14px',
+                          fontWeight: '500'
+                        }}
+                        required
+                      >
+                        <option value="Checked">Checked</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Referred">Referred</option>
+                        <option value="Treated">Treated</option>
+                      </select>
+                      <button 
+                        type="submit" 
+                        disabled={statusLoading || (!editStatus || editStatus === selectedChild.health_status)} 
+                        style={{ 
+                          background: statusLoading || (!editStatus || editStatus === selectedChild.health_status) 
+                            ? '#d1d5db' 
+                            : 'linear-gradient(135deg, #059669 0%, #047857 100%)', 
+                          color: 'white', 
+                          border: 'none', 
+                          borderRadius: '8px', 
+                          padding: '8px 20px', 
+                          fontWeight: '600', 
+                          fontSize: '14px', 
+                          cursor: statusLoading || (!editStatus || editStatus === selectedChild.health_status) 
+                            ? 'not-allowed' 
+                            : 'pointer',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        {statusLoading ? 'Updating...' : 'Update Status'}
+                      </button>
+                    </div>
                   </form>
                 </div>
               </div>
             )}
           </div>
-        </div>
-      )}
-      {activePage === 'profile' && (
-        <div style={{ background: 'white', padding: '2rem', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', border: '1px solid #e9ecef', maxWidth: '400px', margin: '0 auto' }}>
-          <h2 style={{ color: '#374151', fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem' }}>Profile Details</h2>
-          <div style={{ fontSize: '1.1rem', color: '#374151', lineHeight: '2.2' }}>
-            <div><strong>User ID:</strong> {user?.id || 'N/A'}</div>
-            <div><strong>Username:</strong> {user?.username || 'N/A'}</div>
-            <div><strong>Role:</strong> {user?.role || 'N/A'}</div>
-            <div><strong>Created At:</strong> {user?.created_at ? new Date(user.created_at).toLocaleString('en-IN') : 'N/A'}</div>
-            {/* Add more user details here if available */}
+        )}
+        {activePage === 'add' && (
+          <div style={{
+            background: '#ffffff',
+            padding: '32px',
+            borderRadius: '12px',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+            border: '1px solid #e5e7eb',
+            maxWidth: '800px',
+            margin: '0 auto'
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              marginBottom: '24px',
+              borderBottom: '2px solid #f3f4f6',
+              paddingBottom: '16px'
+            }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                background: '#f3f4f6',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <span style={{ fontSize: '18px' }}>➕</span>
+              </div>
+              <h3 style={{ 
+                margin: '0 0 0 12px', 
+                fontSize: '24px', 
+                color: '#111827',
+                fontWeight: '600'
+              }}>
+                Add New Child Record
+              </h3>
+            </div>
+            
+            <form onSubmit={handleFormSubmit}>
+              {/* Child Basic Information */}
+              <div style={{ marginBottom: '32px' }}>
+                <h4 style={{ 
+                  margin: '0 0 20px 0', 
+                  color: '#374151', 
+                  fontSize: '18px',
+                  fontWeight: '600'
+                }}>
+                  Child Information
+                </h4>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                  <div>
+                    <label style={{ 
+                      display: 'block', 
+                      marginBottom: '8px', 
+                      fontWeight: '600', 
+                      color: '#374151',
+                      fontSize: '14px'
+                    }}>
+                      Child Name *
+                    </label>
+                    <input 
+                      type="text" 
+                      name="child_name" 
+                      value={formData.child_name} 
+                      onChange={handleFormChange} 
+                      required 
+                      style={{
+                        width: '100%', 
+                        padding: '12px 16px', 
+                        border: '2px solid #e5e7eb', 
+                        borderRadius: '8px', 
+                        fontSize: '14px',
+                        boxSizing: 'border-box',
+                        transition: 'all 0.2s ease',
+                        fontWeight: '500'
+                      }}
+                      placeholder="Enter child's full name"
+                      onFocus={(e) => {
+                        e.target.style.borderColor = '#6b7280';
+                        e.target.style.boxShadow = '0 0 0 3px rgba(107, 114, 128, 0.1)';
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#e5e7eb';
+                        e.target.style.boxShadow = 'none';
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ 
+                      display: 'block', 
+                      marginBottom: '8px', 
+                      fontWeight: '600', 
+                      color: '#374151',
+                      fontSize: '14px'
+                    }}>
+                      Age (years) *
+                    </label>
+                    <input 
+                      type="number" 
+                      name="age" 
+                      value={formData.age} 
+                      onChange={handleFormChange} 
+                      required 
+                      min="0" 
+                      max="18"
+                      style={{
+                        width: '100%', 
+                        padding: '12px 16px', 
+                        border: '2px solid #e5e7eb', 
+                        borderRadius: '8px', 
+                        fontSize: '14px',
+                        boxSizing: 'border-box',
+                        transition: 'all 0.2s ease',
+                        fontWeight: '500'
+                      }}
+                      placeholder="Age in years"
+                      onFocus={(e) => {
+                        e.target.style.borderColor = '#6b7280';
+                        e.target.style.boxShadow = '0 0 0 3px rgba(107, 114, 128, 0.1)';
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#e5e7eb';
+                        e.target.style.boxShadow = 'none';
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ 
+                      display: 'block', 
+                      marginBottom: '8px', 
+                      fontWeight: '600', 
+                      color: '#374151',
+                      fontSize: '14px'
+                    }}>
+                      Gender *
+                    </label>
+                    <select 
+                      name="gender" 
+                      value={formData.gender} 
+                      onChange={handleFormChange} 
+                      required 
+                      style={{
+                        width: '100%', 
+                        padding: '12px 16px', 
+                        border: '2px solid #e5e7eb', 
+                        borderRadius: '8px', 
+                        fontSize: '14px',
+                        boxSizing: 'border-box',
+                        transition: 'all 0.2s ease',
+                        fontWeight: '500'
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor = '#6b7280';
+                        e.target.style.boxShadow = '0 0 0 3px rgba(107, 114, 128, 0.1)';
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#e5e7eb';
+                        e.target.style.boxShadow = 'none';
+                      }}
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ 
+                      display: 'block', 
+                      marginBottom: '8px', 
+                      fontWeight: '600', 
+                      color: '#374151',
+                      fontSize: '14px'
+                    }}>
+                      Weight (kg) *
+                    </label>
+                    <input 
+                      type="number" 
+                      name="weight" 
+                      value={formData.weight} 
+                      onChange={handleFormChange} 
+                      required 
+                      step="0.1"
+                      min="0"
+                      style={{
+                        width: '100%', 
+                        padding: '12px 16px', 
+                        border: '2px solid #e5e7eb', 
+                        borderRadius: '8px', 
+                        fontSize: '14px',
+                        boxSizing: 'border-box',
+                        transition: 'all 0.2s ease',
+                        fontWeight: '500'
+                      }}
+                      placeholder="Weight in kg"
+                      onFocus={(e) => {
+                        e.target.style.borderColor = '#6b7280';
+                        e.target.style.boxShadow = '0 0 0 3px rgba(107, 114, 128, 0.1)';
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#e5e7eb';
+                        e.target.style.boxShadow = 'none';
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Health Information */}
+              <div style={{ marginBottom: '32px' }}>
+                <h4 style={{ 
+                  margin: '0 0 20px 0', 
+                  color: '#374151', 
+                  fontSize: '18px',
+                  fontWeight: '600'
+                }}>
+                  Health Information
+                </h4>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px' }}>
+                  <div>
+                    <label style={{ 
+                      display: 'block', 
+                      marginBottom: '8px', 
+                      fontWeight: '600', 
+                      color: '#374151',
+                      fontSize: '14px'
+                    }}>
+                      Health Status *
+                    </label>
+                    <select 
+                      name="health_status" 
+                      value={formData.health_status} 
+                      onChange={handleFormChange} 
+                      required 
+                      style={{
+                        width: '100%', 
+                        padding: '12px 16px', 
+                        border: '2px solid #e5e7eb', 
+                        borderRadius: '8px', 
+                        fontSize: '14px',
+                        boxSizing: 'border-box',
+                        transition: 'all 0.2s ease',
+                        fontWeight: '500'
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor = '#6b7280';
+                        e.target.style.boxShadow = '0 0 0 3px rgba(107, 114, 128, 0.1)';
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#e5e7eb';
+                        e.target.style.boxShadow = 'none';
+                      }}
+                    >
+                      <option value="">Select Health Status</option>
+                      <option value="Checked">Checked</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Referred">Referred</option>
+                      <option value="Treated">Treated</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ 
+                      display: 'block', 
+                      marginBottom: '8px', 
+                      fontWeight: '600', 
+                      color: '#374151',
+                      fontSize: '14px'
+                    }}>
+                      Symptoms / Health Observations
+                    </label>
+                    <textarea 
+                      name="symptoms" 
+                      value={formData.symptoms} 
+                      onChange={handleFormChange} 
+                      rows={4}
+                      style={{
+                        width: '100%', 
+                        padding: '12px 16px', 
+                        border: '2px solid #e5e7eb', 
+                        borderRadius: '8px', 
+                        fontSize: '14px',
+                        boxSizing: 'border-box',
+                        resize: 'vertical',
+                        transition: 'all 0.2s ease',
+                        fontFamily: 'inherit',
+                        fontWeight: '500',
+                        lineHeight: '1.5'
+                      }}
+                      placeholder="Describe any symptoms, health issues, or observations..."
+                      onFocus={(e) => {
+                        e.target.style.borderColor = '#6b7280';
+                        e.target.style.boxShadow = '0 0 0 3px rgba(107, 114, 128, 0.1)';
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#e5e7eb';
+                        e.target.style.boxShadow = 'none';
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* School/Anganwadi Information */}
+              <div style={{ marginBottom: '32px' }}>
+                <h4 style={{ 
+                  margin: '0 0 20px 0', 
+                  color: '#374151', 
+                  fontSize: '18px',
+                  fontWeight: '600'
+                }}>
+                  School/Anganwadi Information
+                </h4>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                  <div>
+                    <label style={{ 
+                      display: 'block', 
+                      marginBottom: '8px', 
+                      fontWeight: '600', 
+                      color: '#374151',
+                      fontSize: '14px'
+                    }}>
+                      School Name *
+                    </label>
+                    <input 
+                      type="text" 
+                      name="school_name" 
+                      value={formData.school_name} 
+                      onChange={handleFormChange} 
+                      required 
+                      style={{
+                        width: '100%', 
+                        padding: '12px 16px', 
+                        border: '2px solid #e5e7eb', 
+                        borderRadius: '8px', 
+                        fontSize: '14px',
+                        boxSizing: 'border-box',
+                        transition: 'all 0.2s ease',
+                        fontWeight: '500'
+                      }}
+                      placeholder="Enter school name"
+                      onFocus={(e) => {
+                        e.target.style.borderColor = '#6b7280';
+                        e.target.style.boxShadow = '0 0 0 3px rgba(107, 114, 128, 0.1)';
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#e5e7eb';
+                        e.target.style.boxShadow = 'none';
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ 
+                      display: 'block', 
+                      marginBottom: '8px', 
+                      fontWeight: '600', 
+                      color: '#374151',
+                      fontSize: '14px'
+                    }}>
+                      Anganwadi Kendra *
+                    </label>
+                    <input 
+                      type="text" 
+                      name="anganwadi_kendra" 
+                      value={formData.anganwadi_kendra} 
+                      onChange={handleFormChange} 
+                      required 
+                      style={{
+                        width: '100%', 
+                        padding: '12px 16px', 
+                        border: '2px solid #e5e7eb', 
+                        borderRadius: '8px', 
+                        fontSize: '14px',
+                        boxSizing: 'border-box',
+                        transition: 'all 0.2s ease',
+                        fontWeight: '500'
+                      }}
+                      placeholder="Enter anganwadi kendra name"
+                      onFocus={(e) => {
+                        e.target.style.borderColor = '#6b7280';
+                        e.target.style.boxShadow = '0 0 0 3px rgba(107, 114, 128, 0.1)';
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#e5e7eb';
+                        e.target.style.boxShadow = 'none';
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                type="submit" 
+                style={{
+                  width: '100%', 
+                  padding: '16px', 
+                  background: 'linear-gradient(135deg, #374151 0%, #4b5563 100%)', 
+                  color: 'white',
+                  border: 'none', 
+                  borderRadius: '8px', 
+                  fontSize: '16px', 
+                  cursor: 'pointer', 
+                  fontWeight: '600',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 4px 12px rgba(55, 65, 81, 0.2)'
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.transform = 'translateY(-2px)';
+                  e.target.style.boxShadow = '0 8px 24px rgba(55, 65, 81, 0.3)';
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = '0 4px 12px rgba(55, 65, 81, 0.2)';
+                }}
+              >
+                Add Child Record
+              </button>
+            </form>
           </div>
-        </div>
-      )}
-      {activePage === 'add' && (
-        <div style={{ background: 'white', padding: '2rem', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', border: '1px solid #e9ecef', maxWidth: '600px', margin: '0 auto' }}>
-          <h2 style={{ color: '#374151', fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem' }}>Add New Child</h2>
-          <form onSubmit={handleFormSubmit}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-              <div>
-                <label style={{ fontWeight: 500 }}>Name</label>
-                <input type="text" name="child_name" value={formData.child_name} onChange={handleFormChange} required style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #e5e7eb', marginTop: '0.5rem' }} />
+        )}
+
+        {activePage === 'profile' && (
+          <div style={{
+            background: '#ffffff',
+            padding: '32px',
+            borderRadius: '12px',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+            border: '1px solid #e5e7eb',
+            maxWidth: '600px',
+            margin: '0 auto'
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              marginBottom: '24px',
+              borderBottom: '2px solid #f3f4f6',
+              paddingBottom: '16px'
+            }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                background: '#f3f4f6',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <span style={{ fontSize: '18px' }}>👤</span>
               </div>
-              <div>
-                <label style={{ fontWeight: 500 }}>Age</label>
-                <input type="number" name="age" value={formData.age} onChange={handleFormChange} required style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #e5e7eb', marginTop: '0.5rem' }} />
+              <h3 style={{ 
+                margin: '0 0 0 12px', 
+                fontSize: '24px', 
+                color: '#111827',
+                fontWeight: '600'
+              }}>
+                Profile Details
+              </h3>
+            </div>
+            
+            <div style={{ 
+              display: 'grid',
+              gap: '20px',
+              fontSize: '16px',
+              color: '#374151'
+            }}>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '16px',
+                background: '#f9fafb',
+                borderRadius: '8px',
+                border: '1px solid #e5e7eb'
+              }}>
+                <span style={{ fontWeight: '600', color: '#6b7280' }}>User ID:</span>
+                <span style={{ fontWeight: '500', color: '#111827' }}>{user?.id || 'N/A'}</span>
               </div>
-              <div>
-                <label style={{ fontWeight: 500 }}>Gender</label>
-                <select name="gender" value={formData.gender} onChange={handleFormChange} required style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #e5e7eb', marginTop: '0.5rem' }}>
-                  <option value="">Select</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '16px',
+                background: '#f9fafb',
+                borderRadius: '8px',
+                border: '1px solid #e5e7eb'
+              }}>
+                <span style={{ fontWeight: '600', color: '#6b7280' }}>Username:</span>
+                <span style={{ fontWeight: '500', color: '#111827' }}>{user?.username || 'N/A'}</span>
               </div>
-              <div>
-                <label style={{ fontWeight: 500 }}>Weight (kg)</label>
-                <input type="number" name="weight" value={formData.weight} onChange={handleFormChange} required style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #e5e7eb', marginTop: '0.5rem' }} />
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '16px',
+                background: '#f9fafb',
+                borderRadius: '8px',
+                border: '1px solid #e5e7eb'
+              }}>
+                <span style={{ fontWeight: '600', color: '#6b7280' }}>Role:</span>
+                <span style={{ 
+                  fontWeight: '500', 
+                  color: '#111827',
+                  padding: '4px 12px',
+                  background: '#dbeafe',
+                  borderRadius: '16px',
+                  fontSize: '14px'
+                }}>{user?.role || 'N/A'}</span>
               </div>
-              <div>
-                <label style={{ fontWeight: 500 }}>Health Status</label>
-                <select name="health_status" value={formData.health_status} onChange={handleFormChange} required style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #e5e7eb', marginTop: '0.5rem' }}>
-                  <option value="">Select</option>
-                  <option value="Checked">Checked</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Referred">Referred</option>
-                  <option value="Treated">Treated</option>
-                </select>
-              </div>
-              <div>
-                <label style={{ fontWeight: 500 }}>School Name</label>
-                <input type="text" name="school_name" value={formData.school_name} onChange={handleFormChange} required style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #e5e7eb', marginTop: '0.5rem' }} />
-              </div>
-              <div>
-                <label style={{ fontWeight: 500 }}>Anganwadi Kendra</label>
-                <input type="text" name="anganwadi_kendra" value={formData.anganwadi_kendra} onChange={handleFormChange} required style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #e5e7eb', marginTop: '0.5rem' }} />
-              </div>
-              <div style={{ gridColumn: '1 / span 2' }}>
-                <label style={{ fontWeight: 500 }}>Symptoms</label>
-                <textarea name="symptoms" value={formData.symptoms} onChange={handleFormChange} rows={2} style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #e5e7eb', marginTop: '0.5rem' }} />
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '16px',
+                background: '#f9fafb',
+                borderRadius: '8px',
+                border: '1px solid #e5e7eb'
+              }}>
+                <span style={{ fontWeight: '600', color: '#6b7280' }}>Account Created:</span>
+                <span style={{ fontWeight: '500', color: '#111827', fontSize: '14px', fontFamily: 'monospace' }}>
+                  {user?.created_at ? new Date(user.created_at).toLocaleString('en-IN') : 'N/A'}
+                </span>
               </div>
             </div>
-            <button type="submit" style={{ marginTop: '2rem', background: '#2563eb', color: 'white', border: 'none', borderRadius: '8px', padding: '0.75rem 2rem', fontWeight: '600', fontSize: '1.1rem', cursor: 'pointer' }}>Add Child</button>
-          </form>
-        </div>
-      )}
-
+          </div>
+        )}
+      </div>
     </div>
   );
 };

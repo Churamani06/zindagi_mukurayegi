@@ -1651,7 +1651,7 @@ const SimpleApp = () => {
             
             <div style={{
               textAlign: 'center',
-              padding: '40px 20px',
+              padding: '10px',
               color: '#6b7280',
               fontSize: '16px'
             }}>
