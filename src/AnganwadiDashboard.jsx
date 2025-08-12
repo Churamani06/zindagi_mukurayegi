@@ -19,6 +19,8 @@ const AnganwadiDashboard = ({ user, onLogout }) => {
   const [statusLoading, setStatusLoading] = useState(false);
   const [activePage, setActivePage] = useState('records'); // 'records', 'add', or 'profile'
   const [recordType, setRecordType] = useState('health'); // 'health' or 'worker'
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form state for adding new child
   const [formData, setFormData] = useState({
@@ -79,10 +81,17 @@ const AnganwadiDashboard = ({ user, onLogout }) => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!user || !user.id) return;
+    
+    setIsSubmitting(true);
+    setSuccessMessage(''); // Clear any previous messages
+    
     try {
       const payload = { ...formData, submitted_by_user_id: user.id };
       const res = await childHealthAPI.createRecord(payload);
       if (res.data.success) {
+        // Show success message
+        setSuccessMessage(`✅ Child record for "${formData.child_name}" has been successfully added!`);
+        
         // Refetch all records for this user to ensure data is up-to-date after add
         childHealthAPI.getRecordsByUserId(user.id)
           .then(res2 => {
@@ -95,6 +104,8 @@ const AnganwadiDashboard = ({ user, onLogout }) => {
               positiveCases: data.filter(child => child.health_status === 'Referred').length
             });
           });
+        
+        // Clear form
         setFormData({
           child_name: '',
           age: '',
@@ -105,9 +116,16 @@ const AnganwadiDashboard = ({ user, onLogout }) => {
           school_name: '',
           symptoms: ''
         });
+        
+        // Auto-hide success message after 5 seconds
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 5000);
       }
     } catch (err) {
       alert('Failed to add child record.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -858,6 +876,61 @@ const AnganwadiDashboard = ({ user, onLogout }) => {
               </h3>
             </div>
             
+            {/* Success Message */}
+            {successMessage && (
+              <div style={{
+                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                color: 'white',
+                padding: '16px 20px',
+                borderRadius: '12px',
+                marginBottom: '24px',
+                fontSize: '16px',
+                fontWeight: '600',
+                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                position: 'relative',
+                overflow: 'hidden'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  opacity: 0.3
+                }}></div>
+                <span style={{ position: 'relative', zIndex: 2 }}>{successMessage}</span>
+                <button
+                  onClick={() => setSuccessMessage('')}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.2)',
+                    border: 'none',
+                    color: 'white',
+                    borderRadius: '6px',
+                    padding: '4px 8px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    position: 'relative',
+                    zIndex: 2,
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.background = 'rgba(255, 255, 255, 0.3)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.background = 'rgba(255, 255, 255, 0.2)';
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+            
             <form onSubmit={handleFormSubmit}>
               {/* Child Basic Information */}
               <div style={{ marginBottom: '32px' }}>
@@ -1212,29 +1285,56 @@ const AnganwadiDashboard = ({ user, onLogout }) => {
 
               <button 
                 type="submit" 
+                disabled={isSubmitting}
                 style={{
                   width: '100%', 
                   padding: '16px', 
-                  background: 'linear-gradient(135deg, #374151 0%, #4b5563 100%)', 
+                  background: isSubmitting 
+                    ? '#9ca3af' 
+                    : 'linear-gradient(135deg, #374151 0%, #4b5563 100%)', 
                   color: 'white',
                   border: 'none', 
                   borderRadius: '8px', 
                   fontSize: '16px', 
-                  cursor: 'pointer', 
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer', 
                   fontWeight: '600',
                   transition: 'all 0.2s ease',
-                  boxShadow: '0 4px 12px rgba(55, 65, 81, 0.2)'
+                  boxShadow: isSubmitting 
+                    ? 'none' 
+                    : '0 4px 12px rgba(55, 65, 81, 0.2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
                 }}
                 onMouseOver={(e) => {
-                  e.target.style.transform = 'translateY(-2px)';
-                  e.target.style.boxShadow = '0 8px 24px rgba(55, 65, 81, 0.3)';
+                  if (!isSubmitting) {
+                    e.target.style.transform = 'translateY(-2px)';
+                    e.target.style.boxShadow = '0 8px 24px rgba(55, 65, 81, 0.3)';
+                  }
                 }}
                 onMouseOut={(e) => {
-                  e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = '0 4px 12px rgba(55, 65, 81, 0.2)';
+                  if (!isSubmitting) {
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 4px 12px rgba(55, 65, 81, 0.2)';
+                  }
                 }}
               >
-                Add Child Record
+                {isSubmitting ? (
+                  <>
+                    <div style={{
+                      width: '20px',
+                      height: '20px',
+                      border: '2px solid #ffffff',
+                      borderTop: '2px solid transparent',
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite'
+                    }}></div>
+                    Adding Child Record...
+                  </>
+                ) : (
+                  'Add Child Record'
+                )}
               </button>
             </form>
           </div>
