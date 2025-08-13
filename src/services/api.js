@@ -20,7 +20,10 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
       console.log(`🔐 Adding token to ${config.method?.toUpperCase()} ${config.url}:`, token.substring(0, 20) + '...');
     } else {
-      console.log(`📝 No token available for ${config.method?.toUpperCase()} ${config.url}`);
+      // Only log missing token for protected routes (not login)
+      if (!config.url?.includes('/auth/login')) {
+        console.log(`📝 No token available for ${config.method?.toUpperCase()} ${config.url}`);
+      }
     }
     return config;
   },
