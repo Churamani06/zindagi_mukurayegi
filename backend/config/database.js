@@ -10,10 +10,7 @@ const pool = mysql.createPool({
   port: process.env.DB_PORT,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
-  acquireTimeout: 60000,
-  timeout: 60000,
-  reconnect: true
+  queueLimit: 0
 });
 
 // Test database connection
@@ -86,7 +83,7 @@ const createDefaultAdmin = async () => {
     // Create demo user
     await pool.execute(
       'INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)',
-      ['anganwadi_worker', 'worker123', 'anganwadi']
+      ['anganwadi_worker', 'worker123', 'user']
     );
     console.log('✅ Default user created (username: anganwadi_worker, password: worker123)');
     

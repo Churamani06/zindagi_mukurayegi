@@ -10,7 +10,7 @@ const recordsRoutes = require('./routes/records');
 const dashboardRoutes = require('./routes/dashboard');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8001;
 
 // Security middleware
 app.use(helmet());
@@ -40,13 +40,28 @@ app.use('/api/auth/register', authLimiter);
 
 // CORS configuration - Allow all origins for development
 const corsOptions = {
-  origin: true, // Allow all origins
+  origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://10.10.104.65:3000'], // Allow specific origins
   credentials: true, // Enable credentials for authentication
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  preflightContinue: false
 };
 app.use(cors(corsOptions));
+
+// Additional CORS headers for development
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));

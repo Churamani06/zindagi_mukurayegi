@@ -13,6 +13,15 @@ const SimpleApp = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  // Demo login function for testing
+  const handleDemoLogin = (userType) => {
+    if (userType === 'admin') {
+      setLoginData({ userType: 'admin', username: 'admin', password: 'admin123' });
+    } else {
+      setLoginData({ userType: 'anganwadi', username: 'anganwadi_worker', password: 'worker123' });
+    }
+  };
+
   // Admin Dashboard States
   const [adminStats, setAdminStats] = useState({
     totalRecords: 0,
@@ -30,30 +39,58 @@ const SimpleApp = () => {
   // Check for existing authentication on app load
   useEffect(() => {
     const checkAuth = async () => {
+      console.log('🔍 Checking existing authentication...');
+      
       const token = localStorage.getItem('authToken');
       const userData = localStorage.getItem('userData');
       
       if (token && userData) {
         try {
-          // Use getProfile instead of verifyToken (which doesn't exist)
-          await authAPI.getProfile();
-          const user = JSON.parse(userData);
-          setUser(user);
+          console.log('📝 Found stored token and user data');
+          console.log('🔐 Token:', token.substring(0, 20) + '...');
           
-          // Redirect to appropriate page
-          if (user.role === 'admin') {
-            setCurrentPage('admin-dashboard');
-          } else if (user.role === 'anganwadi') {
-            setCurrentPage('anganwadi-dashboard');
+          const user = JSON.parse(userData);
+          console.log('👤 Stored user:', user);
+          
+          // Verify token with backend
+          console.log('🔍 Verifying token with backend...');
+          const profileResponse = await authAPI.getProfile();
+          
+          if (profileResponse.data && profileResponse.data.success) {
+            console.log('✅ Token verification successful');
+            // Token is valid, restore user session
+            setUser(user);
+            
+            // Redirect to appropriate page based on role
+            if (user.role === 'admin') {
+              console.log('🚀 Redirecting to admin dashboard');
+              setCurrentPage('admin-dashboard');
+            } else if (user.role === 'anganwadi') {
+              console.log('🚀 Redirecting to anganwadi dashboard');
+              setCurrentPage('anganwadi-dashboard');
+            } else {
+              console.log('🚀 Redirecting to data entry');
+              setCurrentPage('data-entry');
+            }
           } else {
-            setCurrentPage('data-entry');
+            console.log('❌ Invalid token response');
+            throw new Error('Invalid token response');
           }
         } catch (error) {
-          console.error('Token verification failed:', error);
-          // Clear invalid auth data
+          console.error('❌ Token verification failed:', error);
+          console.log('🧹 Clearing invalid auth data');
+          
+          // Clear invalid auth data and redirect to login
           localStorage.removeItem('authToken');
           localStorage.removeItem('userData');
+          setUser(null);
+          setCurrentPage('login');
+          setError('Your session has expired. Please login again.');
         }
+      } else {
+        console.log('📋 No stored authentication data found');
+        // No token or userData, ensure we're on login page
+        setCurrentPage('login');
       }
     };
     
@@ -173,29 +210,84 @@ const SimpleApp = () => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
+    
     try {
+      console.log('🔐 Attempting login with:', { 
+        username: loginData.username, 
+        userType: loginData.userType 
+      });
+      
       const response = await authAPI.login({
         username: loginData.username,
         password: loginData.password
       }, loginData.userType);
-      const { token, user } = response.data.data;
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('userData', JSON.stringify(user));
-      setUser(user);
-      // Redirect based on role
-      if (user.role === 'admin') {
-        setCurrentPage('admin-dashboard');
-      } else if (user.role === 'anganwadi') {
-        setCurrentPage('anganwadi-dashboard');
+      
+      console.log('✅ Login response:', response.data);
+      
+      if (response.data && response.data.success) {
+        const { token, user } = response.data.data;
+        
+        // Store auth data in localStorage
+        localStorage.setItem('authToken', token);
+        localStorage.setItem('userData', JSON.stringify(user));
+        
+        console.log('💾 Token stored:', token.substring(0, 20) + '...');
+        console.log('👤 User data stored:', user);
+        
+        // Verify token immediately after storing
+        try {
+          const profileResponse = await authAPI.getProfile();
+          console.log('✅ Token verification successful:', profileResponse.data);
+          
+          // Set user state and redirect
+          setUser(user);
+          setError(''); // Clear any previous errors
+          
+          // Redirect based on role
+          if (user.role === 'admin') {
+            console.log('🚀 Redirecting to admin dashboard');
+            setCurrentPage('admin-dashboard');
+          } else if (user.role === 'anganwadi') {
+            console.log('🚀 Redirecting to anganwadi dashboard');
+            setCurrentPage('anganwadi-dashboard');
+          } else {
+            console.log('🚀 Redirecting to data entry');
+            setCurrentPage('data-entry');
+          }
+        } catch (profileError) {
+          console.error('❌ Token verification failed immediately after login:', profileError);
+          // Clear invalid token
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('userData');
+          throw new Error('Token verification failed');
+        }
       } else {
-        setCurrentPage('data-entry');
+        throw new Error(response.data?.message || 'Login failed');
       }
     } catch (error) {
-      console.error('Login error:', error);
-      setError(
-        error.response?.data?.message || 
-        'Login failed. Please check your credentials.'
-      );
+      console.error('❌ Login error:', error);
+      
+      // Clear any existing auth data on login failure
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userData');
+      setUser(null);
+      
+      // Set appropriate error message
+      if (error.response?.status === 401) {
+        setError('Invalid username or password. Please check your credentials.');
+      } else if (error.response?.status === 403) {
+        setError('Access denied. Please check your user type selection.');
+      } else if (error.response?.status >= 500) {
+        setError('Server error. Please try again later.');
+      } else if (error.message === 'Token verification failed') {
+        setError('Login succeeded but token verification failed. Please try again.');
+      } else {
+        setError(
+          error.response?.data?.message || 
+          error.message ||
+          'Login failed. Please check your credentials and try again.'
+        );
+      }
     } finally {
       setIsLoading(false);
     }
